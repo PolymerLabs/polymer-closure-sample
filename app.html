@@ -1,0 +1,49 @@
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+
+<dom-module id="x-foo">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        color: blue;
+      }
+      ::slotted(*) {
+        color: red;
+      }
+      div {
+        transform-origin: 0 0 0;
+        transform: scale(var(--size, 1));
+      }
+    </style>
+    <div>
+      Hello <slot></slot>
+    </div>
+  </template>
+  <script>
+    (function() {
+    'use strict';
+      window.addEventListener('WebComponentsReady', () => {
+        let base = Polymer.ElementMixin(HTMLElement);
+        class XFoo extends base {
+          static get is() {return 'x-foo'}
+          static get properties() {
+            return {
+              size: {
+                type: Number,
+                observer: "_sizeChanged"
+              }
+            }
+          }
+          ready() {
+            super.ready();
+            this.size = 4;
+          }
+          ["_sizeChanged"]() {
+            window.ShadyCSS.styleSubtree(this, {'--size': String(this.size)});
+          }
+        }
+        customElements.define(XFoo.is, XFoo);
+      });
+    })();
+  </script>
+</dom-module>

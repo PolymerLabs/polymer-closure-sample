@@ -1,0 +1,27 @@
+{
+  "name": "polymer-closure-sample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "init": "bower install && npm install",
+    "serve": "polyserve",
+    "serve:closure": "gulp closure && polyserve dist"
+  },
+  "author": "The Polymer Authors",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "bower": "^1.8.0",
+    "del": "^3.0.0",
+    "eslint": "^4.0.0",
+    "eslint-plugin-html": "^3.0.0",
+    "google-closure-compiler": "^20170521.0.0",
+    "gulp": "^3.9.1",
+    "gulp-if": "^2.0.2",
+    "lazypipe": "^1.0.1",
+    "merge-stream": "^1.0.1",
+    "polymer-build": "^1.5.1",
+    "polyserve": "^0.19.1",
+    "run-sequence": "^1.2.2"
+  }
+}
