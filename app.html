@@ -23,7 +23,13 @@
     (function() {
     'use strict';
       window.addEventListener('WebComponentsReady', () => {
+        /**
+         * @constructor
+         * @extends {HTMLElement}
+         * @implements {Polymer_ElementMixin}
+         */
         let base = Polymer.ElementMixin(HTMLElement);
+        /** @polymer */
         class XFoo extends base {
           static get is() {return 'x-foo'}
           static get properties() {
