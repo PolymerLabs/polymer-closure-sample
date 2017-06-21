@@ -88,7 +88,7 @@ gulp.task('closure', ['clean'], () => {
     new_type_inf: true,
     polymer_version: 2,
     formatting: 'PRETTY_PRINT',
-    variable_renaming_report: 'renamed',
+    // variable_renaming_report: 'renamed',
     externs: [
       'bower_components/shadycss/externs/shadycss-externs.js',
       'bower_components/polymer/externs/webcomponents-externs.js',
@@ -96,9 +96,11 @@ gulp.task('closure', ['clean'], () => {
       'bower_components/polymer/externs/polymer-externs.js',
     ],
     extra_annotation_name: [
-      'polymerMixin',
-      'polymerMixinClass',
-      'polymerElement'
+      'appliesMixin',
+      'mixinClass',
+      'mixinFunction',
+      'polymer',
+      'customElement'
     ]
   });
 

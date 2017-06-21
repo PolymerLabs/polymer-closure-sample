@@ -29,7 +29,11 @@
          * @implements {Polymer_ElementMixin}
          */
         let base = Polymer.ElementMixin(HTMLElement);
-        /** @polymer */
+        /**
+         * @polymer
+         * @extends {base}
+         * @appliesMixin Polymer.ElementMixin
+         */
         class XFoo extends base {
           static get is() {return 'x-foo'}
           static get properties() {
@@ -37,12 +41,18 @@
               size: {
                 type: Number,
                 observer: "_sizeChanged"
+              },
+              readOnlyProp: {
+                type: Boolean,
+                value: false,
+                readOnly: true
               }
             }
           }
           ready() {
             super.ready();
             this.size = 4;
+            this._setReadOnlyProp(false);
           }
           ["_sizeChanged"]() {
             window.ShadyCSS.styleSubtree(this, {'--size': String(this.size)});
