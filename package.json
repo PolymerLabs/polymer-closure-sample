@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "init": "bower install && npm install",
-    "serve": "polyserve",
-    "serve:closure": "gulp closure && polyserve dist"
+    "serve:dev": "npm run init && polyserve",
+    "serve": "npm run init && gulp closure && polyserve dist"
   },
   "author": "The Polymer Authors",
   "license": "BSD-3-Clause",

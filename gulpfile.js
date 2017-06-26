@@ -97,10 +97,10 @@ gulp.task('closure', ['clean'], () => {
     ],
     extra_annotation_name: [
       'appliesMixin',
+      'customElement',
       'mixinClass',
       'mixinFunction',
-      'polymer',
-      'customElement'
+      'polymer'
     ]
   });
 
