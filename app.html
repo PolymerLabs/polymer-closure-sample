@@ -1,3 +1,4 @@
+<!-- <link rel="import" href="bower_components/polymer/externs/polymer-closure-types.html"> -->
 <link rel="import" href="bower_components/polymer/polymer-element.html">
 
 <dom-module id="x-foo">
@@ -15,6 +16,7 @@
         transform: scale(var(--size, 1));
       }
     </style>
+    <button on-click="_clicked">Click here!</button>
     <div>
       Hello <slot></slot>
     </div>
@@ -47,6 +49,7 @@
                 value: false,
                 readOnly: true
               },
+              /** @type {?Object} */
               nullable: {
                 type: Object,
                 value: () => ({})
@@ -55,20 +58,29 @@
           }
           ready() {
             super.ready();
+            this.addEventListener('click', () => this._clicked());
             this.size = 4;
             this._setReadOnlyProp(true);
             setTimeout(() => {
               this.reset();
             });
           }
-          ['_sizeChanged']() {
-            window.ShadyCSS.styleSubtree(this, {'--size': String(this.size)});
+          ['_sizeChanged'](size) {
+            window.ShadyCSS.styleSubtree(this, {'--size': String(size)});
           }
           reset() {
             this.nullable = null;
           }
+          _clicked() {
+            console.log('clicked!');
+          }
         }
+        XFoo.prototype["_clicked"] = XFoo.prototype._clicked;
         customElements.define(XFoo.is, XFoo);
+
+        Polymer({
+          is: 'x-stupid'
+        })
       });
     })();
   </script>

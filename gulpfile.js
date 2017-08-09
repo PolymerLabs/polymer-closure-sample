@@ -19,6 +19,7 @@ const mergeStream = require('merge-stream');
 const closure = require('google-closure-compiler').gulp();
 const Polymer = require('polymer-build');
 const lazypipe = require('lazypipe');
+const size = require('gulp-size');
 
 const {Transform} = require('stream');
 
@@ -52,14 +53,43 @@ class BackfillStream extends Transform {
 
 gulp.task('clean', () => del('dist'));
 
+const dom5 = require('dom5'); const path = require('path');
+
+let firstImportFinder = dom5.predicates.AND(dom5.predicates.hasTagName('link'), dom5.predicates.hasAttrValue('rel', 'import'));
+
+class AddClosureTypeImport extends Transform {
+  constructor(entryFileName, typeFileName) {
+    super({objectMode: true});
+    this.target = path.resolve(entryFileName);
+    this.importPath = path.resolve(typeFileName);
+  }
+  _transform(file, enc, cb) {
+    if (file.path === this.target) {
+      let contents = file.contents.toString();
+      let html = dom5.parse(contents, {locationInfo: true});
+      let firstImport = dom5.query(html, firstImportFinder);
+      if (firstImport) {
+        let importPath = path.relative(path.dirname(this.target), this.importPath);
+        let importLink = dom5.constructors.element('link');
+        dom5.setAttribute(importLink, 'rel', 'import');
+        dom5.setAttribute(importLink, 'href', importPath);
+        dom5.insertBefore(firstImport.parentNode, firstImport, importLink);
+        file.contents = Buffer(dom5.serialize(html));
+      }
+    }
+    cb(null, file);
+  }
+}
+
 gulp.task('closure', ['clean'], () => {
 
-  let shell, splitRx, joinRx;
+  let shell, splitRx, joinRx, addClosureTypes;
 
   function config(path) {
     shell = path;
     joinRx = new RegExp(path.split('/').join('\\/'));
     splitRx = new RegExp(joinRx.source + '_script_\\d+\\.js$');
+    addClosureTypes = new AddClosureTypeImport(shell, 'bower_components/polymer/externs/polymer-closure-types.html');
   }
 
   config('app.html');
@@ -72,6 +102,7 @@ gulp.task('closure', ['clean'], () => {
       'bower_components/shadycss/custom-style-interface.html',
     ],
     extraDependencies: [
+      addClosureTypes.importPath,
       "bower_components/webcomponentsjs/webcomponents-lite.js",
       "bower_components/webcomponentsjs/custom-elements-es5-adapter.js"
     ]
@@ -81,14 +112,13 @@ gulp.task('closure', ['clean'], () => {
     compilation_level: 'ADVANCED',
     language_in: 'ES6_STRICT',
     language_out: 'ES5_STRICT',
-    warning_level: 'VERBOSE',
     isolation_mode: 'IIFE',
     assume_function_wrapper: true,
     rewrite_polyfills: false,
     new_type_inf: true,
     polymer_version: 2,
     formatting: 'PRETTY_PRINT',
-    // variable_renaming_report: 'renamed',
+    // use_types_for_optimization: false,
     externs: [
       'bower_components/shadycss/externs/shadycss-externs.js',
       'bower_components/polymer/externs/webcomponents-externs.js',
@@ -119,10 +149,12 @@ gulp.task('closure', ['clean'], () => {
 
   const splitter = new Polymer.HtmlSplitter();
   return mergedFiles
+    .pipe(addClosureTypes)
     .pipe(project.bundler())
     .pipe(splitter.split())
     .pipe(gulpif(splitRx, closurePipeline()))
     .pipe(splitter.rejoin())
     .pipe(project.addCustomElementsEs5Adapter())
+    .pipe(gulpif(joinRx, size({title: 'bundle size', gzip: true, showTotal: false, showFiles: true})))
     .pipe(gulp.dest('dist'))
 });

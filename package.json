@@ -13,15 +13,17 @@
   "devDependencies": {
     "bower": "^1.8.0",
     "del": "^3.0.0",
+    "dom5": "^1.3.6",
     "eslint": "^4.0.0",
     "eslint-plugin-html": "^3.0.0",
     "google-closure-compiler": "^20170521.0.0",
     "gulp": "^3.9.1",
     "gulp-if": "^2.0.2",
+    "gulp-size": "^2.1.0",
+    "gulp-sourcemaps": "^2.6.0",
     "lazypipe": "^1.0.1",
     "merge-stream": "^1.0.1",
-    "polymer-build": "^1.5.1",
-    "polyserve": "^0.19.1",
-    "run-sequence": "^1.2.2"
+    "polymer-build": "^1.6.0",
+    "polyserve": "^0.19.1"
   }
 }
