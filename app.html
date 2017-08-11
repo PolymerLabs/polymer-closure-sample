@@ -65,7 +65,7 @@
               this.reset();
             });
           }
-          ['_sizeChanged'](size) {
+          _sizeChanged(size) {
             window.ShadyCSS.styleSubtree(this, {'--size': String(size)});
           }
           reset() {
@@ -76,10 +76,17 @@
           }
         }
         XFoo.prototype["_clicked"] = XFoo.prototype._clicked;
+        XFoo.prototype["_sizeChanged"] = XFoo.prototype._sizeChanged;
         customElements.define(XFoo.is, XFoo);
 
         Polymer({
-          is: 'x-stupid'
+          is: 'x-stupid',
+          properties: {
+            foo: {
+              type: String,
+              value: 'bar'
+            }
+          }
         })
       });
     })();

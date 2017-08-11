@@ -118,7 +118,6 @@ gulp.task('closure', ['clean'], () => {
     new_type_inf: true,
     polymer_version: 2,
     formatting: 'PRETTY_PRINT',
-    // use_types_for_optimization: false,
     externs: [
       'bower_components/shadycss/externs/shadycss-externs.js',
       'bower_components/polymer/externs/webcomponents-externs.js',
@@ -158,3 +157,5 @@ gulp.task('closure', ['clean'], () => {
     .pipe(gulpif(joinRx, size({title: 'bundle size', gzip: true, showTotal: false, showFiles: true})))
     .pipe(gulp.dest('dist'))
 });
+
+gulp.task('default', ['closure']);
